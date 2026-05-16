@@ -1,10 +1,9 @@
 import { MethodChips } from "../components/MethodChips";
 import { RecipeCard } from "../components/RecipeCard";
 import { SearchBar } from "../components/SearchBar";
-import { LiffBootstrapState, MethodFilter, Recipe } from "../types";
+import { MethodFilter, Recipe } from "../types";
 
 interface HomePageProps {
-  liffState: LiffBootstrapState;
   loadError: string | null;
   searchText: string;
   selectedMethod: MethodFilter;
@@ -15,7 +14,6 @@ interface HomePageProps {
 }
 
 export function HomePage({
-  liffState,
   loadError,
   searchText,
   selectedMethod,
@@ -39,31 +37,8 @@ export function HomePage({
       <section className="hero-panel">
         <p className="eyebrow">Farmaroundyou LIFF</p>
         <h1>晃晃食譜助手</h1>
-        <p className="hero-copy">
-          用現有農產品快速找食譜，優先讀取 GAS Web App API，並維持 LIFF 內外都可開啟。
-        </p>
+        <p className="hero-copy">快速找到適合你的料理靈感</p>
       </section>
-
-      <section className="status-panel">
-        <div>
-          <strong>LIFF 狀態</strong>
-          <p>{liffState.isLiffReady ? "已初始化" : "瀏覽器模式"}</p>
-        </div>
-        <div>
-          <strong>執行環境</strong>
-          <p>{liffState.isInClient ? "LINE 內建瀏覽器" : "外部瀏覽器"}</p>
-        </div>
-      </section>
-
-      <section className="notice-panel" role="status">
-        {liffState.lineUserId ? "LINE 會員模式：已連線" : "訪客模式：無法取得 LINE 身分"}
-      </section>
-
-      {liffState.error ? (
-        <section className="notice-panel" role="status">
-          {liffState.error}
-        </section>
-      ) : null}
 
       {loadError ? (
         <section className="notice-panel" role="alert">
@@ -84,7 +59,7 @@ export function HomePage({
         {recipes.length > 0 ? (
           <div className="recipe-grid">
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} onClick={onRecipeSelect} />
+              <RecipeCard key={recipe.recipeId} recipe={recipe} onClick={onRecipeSelect} />
             ))}
           </div>
         ) : loadError ? (

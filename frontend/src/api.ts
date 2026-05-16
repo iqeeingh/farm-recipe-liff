@@ -2,7 +2,7 @@ import { METHOD_OPTIONS, Recipe, RecipeApiResponse, RecipeEventPayload } from ".
 
 const fallbackRecipes: Recipe[] = [
   {
-    id: "soy-braised-chicken",
+    recipeId: "MOCK_R001",
     productId: "chicken-drumstick",
     recipeName: "醬香滷雞腿",
     productName: "放山雞棒腿",
@@ -21,7 +21,7 @@ const fallbackRecipes: Recipe[] = [
     productUrl: "https://example.com/products/soy-braised-chicken",
   },
   {
-    id: "pan-seared-pork",
+    recipeId: "MOCK_R002",
     productId: "pork-shoulder-steak",
     recipeName: "香煎梅花豬排",
     productName: "台灣梅花豬排",
@@ -40,7 +40,7 @@ const fallbackRecipes: Recipe[] = [
     productUrl: "https://example.com/products/pan-seared-pork",
   },
   {
-    id: "air-fryer-wings",
+    recipeId: "MOCK_R003",
     productId: "split-wings",
     recipeName: "氣炸蒜香雞翅",
     productName: "去節雞翅",
@@ -59,7 +59,7 @@ const fallbackRecipes: Recipe[] = [
     productUrl: "https://example.com/products/air-fryer-wings",
   },
   {
-    id: "crispy-fish",
+    recipeId: "MOCK_R004",
     productId: "sea-bass-fillet",
     recipeName: "酥炸白身魚塊",
     productName: "無刺鱸魚切片",
@@ -78,7 +78,7 @@ const fallbackRecipes: Recipe[] = [
     productUrl: "https://example.com/products/crispy-fish",
   },
   {
-    id: "roasted-vegetables",
+    recipeId: "MOCK_R005",
     productId: "seasonal-vegetable-box",
     recipeName: "香草烤時蔬盤",
     productName: "綜合時令蔬菜箱",
@@ -97,7 +97,7 @@ const fallbackRecipes: Recipe[] = [
     productUrl: "https://example.com/products/roasted-vegetables",
   },
   {
-    id: "corn-soup",
+    recipeId: "MOCK_R006",
     productId: "native-chicken-cuts",
     recipeName: "玉米雞湯",
     productName: "土雞切塊",
@@ -155,31 +155,21 @@ function toMethodArray(value: unknown): Recipe["method"] {
   return methods.length > 0 ? methods : ["快速料理"];
 }
 
-function createRecipeId(recipeName: string, productName: string, index: number): string {
-  const source = `${recipeName}-${productName}-${index}`
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9\u4e00-\u9fff-]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-
-  return source || `recipe-${index}`;
-}
-
 function normalizeRecipe(value: unknown, index: number): Recipe {
   if (!isRecord(value)) {
     throw new Error(`第 ${index + 1} 筆食譜資料格式不正確。`);
   }
 
+  const recipeId = toStringValue(value.recipeId);
   const recipeName = toStringValue(value.recipeName);
   const productName = toStringValue(value.productName);
 
-  if (!recipeName || !productName) {
-    throw new Error(`第 ${index + 1} 筆食譜缺少 recipeName 或 productName。`);
+  if (!recipeId || !recipeName || !productName) {
+    throw new Error(`第 ${index + 1} 筆食譜缺少 recipeId、recipeName 或 productName。`);
   }
 
   return {
-    id: toStringValue(value.id, createRecipeId(recipeName, productName, index)),
+    recipeId,
     productId: toStringValue(value.productId, ""),
     recipeName,
     productName,

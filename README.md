@@ -6,7 +6,7 @@ This repository includes a Vite + React + TypeScript frontend scaffold under [fr
 
 The frontend uses a safe LIFF bootstrap flow that still renders normally outside the LINE in-app browser. Recipe data is loaded from the GAS Web App API when `VITE_GAS_API_BASE` is configured, with a small local fallback dataset for development.
 
-When LIFF initializes successfully inside LINE and the user is logged in, the frontend reads only `userId` from `liff.getProfile()` and includes that `lineUserId` in recipe event logs. Outside LINE, or if LIFF cannot provide identity, the app stays in guest mode and uses the local `visitorId` fallback.
+When LIFF initializes successfully inside LINE and the user is logged in, the frontend reads only `userId` from `liff.getProfile()` and includes that `lineUserId` in recipe event logs. Outside LINE, or if LIFF cannot provide identity, the app stays in guest mode and uses the local `visitorId` fallback. The production consumer UI does not expose LIFF/debug status cards or internal environment messaging.
 
 ### Environment variables
 
@@ -63,6 +63,7 @@ npm run build
 - Fallback local recipe data when `VITE_GAS_API_BASE` is missing
 - LIFF initialization helper in `frontend/src/liff.ts` with guest fallback outside LINE
 - Search and method chip filtering
+- Empty-state recovery UI for unmatched filters and search keywords
 - Detail-page purchase button
 
 This task does not modify `gas/Code.gs`, does not use LINE webhook, and does not implement push messaging.

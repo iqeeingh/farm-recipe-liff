@@ -144,7 +144,7 @@ function App() {
       category: recipe.category,
       productId: recipe.productId,
       productName: recipe.productName,
-      recipeId: recipe.id,
+      recipeId: recipe.recipeId,
       recipeName: recipe.recipeName,
     });
   };
@@ -161,7 +161,7 @@ function App() {
       category: recipe.category,
       productId: recipe.productId,
       productName: recipe.productName,
-      recipeId: recipe.id,
+      recipeId: recipe.recipeId,
       recipeName: recipe.recipeName,
     });
 
@@ -194,7 +194,6 @@ function App() {
 
   return (
     <HomePage
-      liffState={liffState}
       loadError={loadError}
       searchText={searchText}
       selectedMethod={selectedMethod}

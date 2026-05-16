@@ -16,7 +16,7 @@ export const METHOD_OPTIONS = [
 export type MethodFilter = (typeof METHOD_OPTIONS)[number];
 
 export interface Recipe {
-  id: string;
+  recipeId: string;
   productId: string;
   recipeName: string;
   productName: string;
