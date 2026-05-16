@@ -28,6 +28,7 @@ export interface Recipe {
   steps: string[];
   tips: string[];
   productUrl: string;
+  sourceUrl: string;
 }
 
 export interface RecipeApiResponse {
@@ -47,7 +48,8 @@ export type RecipeEventType =
   | "click_method"
   | "search_keyword"
   | "view_recipe"
-  | "click_product";
+  | "click_product"
+  | "click_source_recipe";
 
 export interface RecipeEventPayload {
   lineUserId?: string;

@@ -59,6 +59,11 @@ No real secrets should be committed.
 - Frontend tips parsing also accepts fallback `|`.
 - Tips are not split on commas, `、`, or sentence punctuation.
 
+### Recipe URLs
+
+- `productUrl` is the purchase or product page CTA.
+- `sourceUrl` is the original full recipe article CTA.
+
 ### Static assets
 
 Place `recipe-placeholder.png` inside `frontend/public/` so recipe cards and detail pages can fall back to `/recipe-placeholder.png` when an image URL is missing or fails to load.

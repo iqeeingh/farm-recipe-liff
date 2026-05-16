@@ -267,12 +267,28 @@ img {
 }
 
 .purchase-button {
-  width: calc(100% - 32px);
-  margin: 0 16px 16px;
+  width: 100%;
+  margin: 0;
   padding: 16px;
   border-radius: 18px;
   background: linear-gradient(135deg, var(--accent), #d7861f);
   color: #fffdf5;
+  font-weight: 700;
+}
+
+.detail-action-row {
+  display: grid;
+  gap: 12px;
+  margin: 0 16px 16px;
+}
+
+.source-button {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(47, 106, 69, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--brand-strong);
   font-weight: 700;
 }
 
@@ -455,6 +471,10 @@ img {
 
   .hero-panel h1 {
     font-size: 2.4rem;
+  }
+
+  .detail-action-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

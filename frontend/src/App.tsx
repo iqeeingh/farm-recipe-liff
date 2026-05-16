@@ -180,6 +180,29 @@ function App() {
     }
   };
 
+  const handleSourceRecipeClick = (recipe: Recipe) => {
+    if (!recipe.sourceUrl) {
+      return;
+    }
+
+    logRecipeEvent({
+      lineUserId: lineUserId ?? undefined,
+      visitorId: liffState.visitorId,
+      eventType: "click_source_recipe",
+      category: recipe.category,
+      productId: recipe.productId,
+      productName: recipe.productName,
+      recipeId: recipe.recipeId,
+      recipeName: recipe.recipeName,
+    });
+
+    const opened = window.open(recipe.sourceUrl, "_blank", "noopener,noreferrer");
+
+    if (!opened) {
+      window.location.href = recipe.sourceUrl;
+    }
+  };
+
   if (isLoading) {
     return (
       <main className="app-shell">
@@ -200,6 +223,7 @@ function App() {
         recipe={selectedRecipe}
         onBack={() => setSelectedRecipe(null)}
         onProductClick={handleProductClick}
+        onSourceRecipeClick={handleSourceRecipeClick}
       />
     );
   }

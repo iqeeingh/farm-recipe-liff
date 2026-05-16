@@ -31,6 +31,7 @@ const fallbackRecipes: Recipe[] = [
     ],
     tips: ["起鍋前浸泡 10 分鐘更入味。"],
     productUrl: "https://example.com/products/soy-braised-chicken",
+    sourceUrl: "https://example.com/recipes/soy-braised-chicken",
   },
   {
     recipeId: "MOCK_R002",
@@ -50,6 +51,7 @@ const fallbackRecipes: Recipe[] = [
     ],
     tips: ["厚切豬排可先蓋鍋 1 分鐘幫助熟成。"],
     productUrl: "https://example.com/products/pan-seared-pork",
+    sourceUrl: "https://example.com/recipes/pan-seared-pork",
   },
   {
     recipeId: "MOCK_R003",
@@ -69,6 +71,7 @@ const fallbackRecipes: Recipe[] = [
     ],
     tips: ["想更脆可最後加炸 2 分鐘。"],
     productUrl: "https://example.com/products/air-fryer-wings",
+    sourceUrl: "https://example.com/recipes/air-fryer-wings",
   },
   {
     recipeId: "MOCK_R004",
@@ -88,6 +91,7 @@ const fallbackRecipes: Recipe[] = [
     ],
     tips: ["二次回炸 30 秒可提升酥度。"],
     productUrl: "https://example.com/products/crispy-fish",
+    sourceUrl: "https://example.com/recipes/crispy-fish",
   },
   {
     recipeId: "MOCK_R005",
@@ -107,6 +111,7 @@ const fallbackRecipes: Recipe[] = [
     ],
     tips: ["南瓜與馬鈴薯可切小塊避免熟度不均。"],
     productUrl: "https://example.com/products/roasted-vegetables",
+    sourceUrl: "https://example.com/recipes/roasted-vegetables",
   },
   {
     recipeId: "MOCK_R006",
@@ -126,6 +131,7 @@ const fallbackRecipes: Recipe[] = [
     ],
     tips: ["玉米切段後稍微拍裂，甜味更容易釋出。"],
     productUrl: "https://example.com/products/corn-soup",
+    sourceUrl: "https://example.com/recipes/corn-soup",
   },
 ];
 
@@ -286,6 +292,7 @@ function normalizeRecipe(value: unknown, index: number): Recipe {
     steps: toStepArray(value.steps),
     tips: toTipsArray(value.tips),
     productUrl: toStringValue(value.productUrl, "#"),
+    sourceUrl: toStringValue(value.sourceUrl, ""),
   };
 }
 

@@ -5,14 +5,21 @@ interface RecipeDetailPageProps {
   recipe: Recipe;
   onBack: () => void;
   onProductClick: (recipe: Recipe) => void;
+  onSourceRecipeClick: (recipe: Recipe) => void;
 }
 
 const FALLBACK_IMAGE_SRC = "/recipe-placeholder.png";
 
-export function RecipeDetailPage({ recipe, onBack, onProductClick }: RecipeDetailPageProps) {
+export function RecipeDetailPage({
+  recipe,
+  onBack,
+  onProductClick,
+  onSourceRecipeClick,
+}: RecipeDetailPageProps) {
   const initialImageSrc = recipe.imageUrl.trim() || FALLBACK_IMAGE_SRC;
   const [imageSrc, setImageSrc] = useState(initialImageSrc);
   const hasTips = recipe.tips.length > 0;
+  const hasSourceUrl = recipe.sourceUrl.trim().length > 0;
 
   const handleImageError = () => {
     if (imageSrc !== FALLBACK_IMAGE_SRC) {
@@ -71,9 +78,20 @@ export function RecipeDetailPage({ recipe, onBack, onProductClick }: RecipeDetai
           </section>
         ) : null}
 
-        <button type="button" className="purchase-button" onClick={() => onProductClick(recipe)}>
-          前往購買商品
-        </button>
+        <div className="detail-action-row">
+          <button type="button" className="purchase-button" onClick={() => onProductClick(recipe)}>
+            前往購買商品
+          </button>
+          {hasSourceUrl ? (
+            <button
+              type="button"
+              className="source-button"
+              onClick={() => onSourceRecipeClick(recipe)}
+            >
+              查看詳細食譜
+            </button>
+          ) : null}
+        </div>
       </article>
     </main>
   );
