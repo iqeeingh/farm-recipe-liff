@@ -214,6 +214,23 @@ function toStringArray(value: unknown): string[] {
   return [];
 }
 
+function toStepArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (typeof item === "string" ? item.trim() : ""))
+      .filter((item) => item.length > 0);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(/[｜|]|\r?\n/g)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+  }
+
+  return [];
+}
+
 function toMethodArray(value: unknown): Recipe["method"] {
   const methodOptions = new Set(METHOD_OPTIONS.filter((item) => item !== "全部"));
   const methods = toStringArray(value).filter(
@@ -249,7 +266,7 @@ function normalizeRecipe(value: unknown, index: number): Recipe {
       "https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&fit=crop&w=900&q=80",
     ),
     ingredients: toStringArray(value.ingredients),
-    steps: toStringArray(value.steps),
+    steps: toStepArray(value.steps),
     tips: toStringArray(value.tips),
     productUrl: toStringValue(value.productUrl, "#"),
   };

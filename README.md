@@ -47,6 +47,12 @@ No real secrets should be committed.
 - `sceneTags` are separate multi-value usage-scene labels such as meal context or audience.
 - `sceneTags` must not be added to the method chips.
 
+### Recipe step delimiter
+
+- Google Sheet recipe `steps` content should use `｜` as the official delimiter between cooking steps.
+- Frontend step parsing also accepts fallback `|`.
+- Steps are not split on commas, `、`, or sentence punctuation.
+
 ### Static assets
 
 Place `recipe-placeholder.png` inside `frontend/public/` so recipe cards and detail pages can fall back to `/recipe-placeholder.png` when an image URL is missing or fails to load.
