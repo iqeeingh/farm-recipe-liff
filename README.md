@@ -27,6 +27,17 @@ Recipe event logging also uses the same base URL with:
 ${VITE_GAS_API_BASE}?action=logEvent&...
 ```
 
+Analytics endpoints also use the same base URL with:
+
+```text
+${VITE_GAS_API_BASE}?action=getAnalyticsSummary&days=30
+${VITE_GAS_API_BASE}?action=getDailyMethodStats&days=30
+${VITE_GAS_API_BASE}?action=getDailyRecipeStats&days=30
+${VITE_GAS_API_BASE}?action=getDailyProductStats&days=30
+${VITE_GAS_API_BASE}?action=getDailySceneStats&days=30
+${VITE_GAS_API_BASE}?action=getDailyEventStats&days=30
+```
+
 No real secrets should be committed.
 
 ### Recipe taxonomy
@@ -58,6 +69,7 @@ npm run build
 ## Current scope
 
 - Mobile-first recipe list and detail UI
+- Visual analytics dashboard at `/?page=analytics`
 - GAS recipe API integration in `frontend/src/api.ts`
 - Frontend recipe event logging to GAS `recipe_events`
 - Fallback local recipe data when `VITE_GAS_API_BASE` is missing
@@ -66,4 +78,44 @@ npm run build
 - Empty-state recovery UI for unmatched filters and search keywords
 - Detail-page purchase button
 
-This task does not modify `gas/Code.gs`, does not use LINE webhook, and does not implement push messaging.
+## Analytics retention
+
+The Apps Script backend keeps raw `recipe_events` for 5 years and writes permanent daily summary tables so long-term reporting does not depend on infinite raw-event growth in Google Sheets.
+
+Daily summary sheets:
+
+- `daily_method_stats`
+- `daily_recipe_stats`
+- `daily_product_stats`
+- `daily_scene_stats`
+- `daily_event_stats`
+
+Scheduled maintenance:
+
+- Function: `dailyRecipeMaintenance`
+- Trigger: time-driven, daily
+- Time: `1am–2am` in `Asia/Taipei`
+
+The maintenance job runs:
+
+1. `summarizeYesterdayRecipeEvents()`
+2. `rebuildUserTagsRecent(180)`
+3. `cleanupOldRecipeEvents()`
+
+See [docs/SHEET_SCHEMA.md](./docs/SHEET_SCHEMA.md) and [docs/DEPLOY.md](./docs/DEPLOY.md) for schema and deployment details.
+
+## Analytics dashboard
+
+Open the analytics dashboard with:
+
+```text
+/?page=analytics
+```
+
+It reads only from:
+
+- `daily_method_stats`
+- `daily_recipe_stats`
+- `daily_product_stats`
+- `daily_scene_stats`
+- `daily_event_stats`

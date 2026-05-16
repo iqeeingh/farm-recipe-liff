@@ -292,6 +292,158 @@ img {
   font-weight: 700;
 }
 
+.analytics-shell {
+  max-width: 1120px;
+}
+
+.analytics-hero {
+  background:
+    radial-gradient(circle at right top, rgba(231, 169, 59, 0.22), transparent 34%),
+    var(--surface);
+}
+
+.analytics-toolbar,
+.analytics-card,
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.analytics-toolbar {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 24px;
+}
+
+.analytics-card-grid,
+.analytics-chart-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.analytics-card-grid {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.analytics-card {
+  padding: 18px;
+  border-radius: 22px;
+}
+
+.analytics-card-label,
+.analytics-card-meta,
+.chart-empty,
+.chart-label {
+  color: var(--text-muted);
+}
+
+.analytics-card-label {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.analytics-card-value {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.8rem;
+  line-height: 1.1;
+  color: #1d2b23;
+}
+
+.analytics-card-meta {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.92rem;
+}
+
+.chart-panel {
+  padding: 18px;
+  border-radius: 24px;
+}
+
+.chart-heading h3 {
+  margin: 0;
+}
+
+.chart-empty {
+  padding: 40px 0 12px;
+  text-align: center;
+}
+
+.bar-chart {
+  margin-top: 18px;
+}
+
+.bar-row + .bar-row {
+  margin-top: 14px;
+}
+
+.bar-row-labels {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.bar-row-label {
+  color: #1d2b23;
+  font-weight: 600;
+}
+
+.bar-row-value {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.bar-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(47, 106, 69, 0.12);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--brand), #5f8f63);
+}
+
+.line-chart-shell {
+  margin-top: 18px;
+  overflow-x: auto;
+}
+
+.line-chart {
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+}
+
+.chart-axis {
+  stroke: rgba(53, 84, 67, 0.2);
+  stroke-width: 1.5;
+}
+
+.line-path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line-point {
+  fill: var(--brand);
+}
+
+.chart-label {
+  font-size: 11px;
+}
+
 @media (min-width: 640px) {
   .app-shell {
     padding: 28px 20px 48px;
@@ -303,5 +455,23 @@ img {
 
   .hero-panel h1 {
     font-size: 2.4rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .analytics-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .analytics-card-wide {
+    grid-column: span 1;
+  }
+
+  .analytics-chart-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-chart-grid .chart-panel:last-child {
+    grid-column: 1 / -1;
   }
 }

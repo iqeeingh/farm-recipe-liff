@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchRecipes, logRecipeEvent } from "./api";
 import { getVisitorId, initializeLiff } from "./liff";
+import { AnalyticsPage } from "./pages/AnalyticsPage";
 import { HomePage } from "./pages/HomePage";
 import { RecipeDetailPage } from "./pages/RecipeDetailPage";
 import { LiffBootstrapState, MethodFilter, Recipe } from "./types";
@@ -15,6 +16,9 @@ const DEFAULT_LIFF_STATE: LiffBootstrapState = {
 };
 
 function App() {
+  const currentPage =
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("page") : null;
+  const isAnalyticsPage = currentPage === "analytics";
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<MethodFilter>("全部");
@@ -38,30 +42,34 @@ function App() {
       }
     });
 
-    void fetchRecipes()
-      .then((items) => {
-        if (active) {
-          setRecipes(items);
-          setLoadError(null);
-        }
-      })
-      .catch((error: unknown) => {
-        if (active) {
-          setRecipes([]);
-          setSelectedRecipe(null);
-          setLoadError(error instanceof Error ? error.message : "食譜載入失敗，請稍後再試。");
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setIsLoading(false);
-        }
-      });
+    if (isAnalyticsPage) {
+      setIsLoading(false);
+    } else {
+      void fetchRecipes()
+        .then((items) => {
+          if (active) {
+            setRecipes(items);
+            setLoadError(null);
+          }
+        })
+        .catch((error: unknown) => {
+          if (active) {
+            setRecipes([]);
+            setSelectedRecipe(null);
+            setLoadError(error instanceof Error ? error.message : "食譜載入失敗，請稍後再試。");
+          }
+        })
+        .finally(() => {
+          if (active) {
+            setIsLoading(false);
+          }
+        });
+    }
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [isAnalyticsPage]);
 
   useEffect(() => {
     if (hasLoggedPageViewRef.current || !hasResolvedLiff || !liffState.visitorId) {
@@ -180,6 +188,10 @@ function App() {
         </section>
       </main>
     );
+  }
+
+  if (isAnalyticsPage) {
+    return <AnalyticsPage />;
   }
 
   if (selectedRecipe) {

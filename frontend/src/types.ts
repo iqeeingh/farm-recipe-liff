@@ -36,6 +36,12 @@ export interface RecipeApiResponse {
   error?: string;
 }
 
+export interface AnalyticsApiResponse<T> {
+  ok: boolean;
+  data: T;
+  error?: string;
+}
+
 export type RecipeEventType =
   | "page_view"
   | "click_method"
@@ -63,4 +69,58 @@ export interface LiffBootstrapState {
   error: string | null;
   lineUserId: string | null;
   visitorId: string;
+}
+
+export interface AnalyticsSummaryItem {
+  label: string;
+  count: number;
+}
+
+export interface AnalyticsSummary {
+  days: number;
+  totalEvents: number;
+  recipeViews: number;
+  productClicks: number;
+  topMethod: AnalyticsSummaryItem | null;
+  topRecipe: AnalyticsSummaryItem | null;
+  topProduct: AnalyticsSummaryItem | null;
+}
+
+export interface DailyMethodStat {
+  date: string;
+  method: string;
+  count: number;
+  updatedAt: string;
+}
+
+export interface DailyRecipeStat {
+  date: string;
+  recipeId: string;
+  recipeName: string;
+  viewCount: number;
+  productClickCount: number;
+  updatedAt: string;
+}
+
+export interface DailyProductStat {
+  date: string;
+  productId: string;
+  productName: string;
+  viewCount: number;
+  productClickCount: number;
+  updatedAt: string;
+}
+
+export interface DailySceneStat {
+  date: string;
+  sceneTag: string;
+  count: number;
+  updatedAt: string;
+}
+
+export interface DailyEventStat {
+  date: string;
+  eventType: string;
+  count: number;
+  updatedAt: string;
 }

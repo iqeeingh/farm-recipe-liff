@@ -1,4 +1,16 @@
-import { METHOD_OPTIONS, Recipe, RecipeApiResponse, RecipeEventPayload } from "./types";
+import {
+  AnalyticsApiResponse,
+  AnalyticsSummary,
+  DailyEventStat,
+  DailyMethodStat,
+  DailyProductStat,
+  DailyRecipeStat,
+  DailySceneStat,
+  METHOD_OPTIONS,
+  Recipe,
+  RecipeApiResponse,
+  RecipeEventPayload,
+} from "./types";
 
 const fallbackRecipes: Recipe[] = [
   {
@@ -125,6 +137,62 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
+function normalizeNumber(value: unknown): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function normalizeDays(days: number): 7 | 30 | 90 | 180 | 365 {
+  const allowedDays = new Set([7, 30, 90, 180, 365]);
+  return allowedDays.has(days) ? (days as 7 | 30 | 90 | 180 | 365) : 30;
+}
+
+async function fetchApi<T>(action: string, days?: number): Promise<T> {
+  const apiBase = getApiBase();
+
+  if (!apiBase) {
+    throw new Error("VITE_GAS_API_BASE 未設定。");
+  }
+
+  const params = new URLSearchParams({ action });
+  if (days) {
+    params.set("days", String(normalizeDays(days)));
+  }
+
+  let response: Response;
+
+  try {
+    response = await fetch(`${apiBase}?${params.toString()}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? `分析 API 連線失敗：${error.message}` : "分析 API 連線失敗，請稍後再試。",
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(`分析 API 回應失敗（HTTP ${response.status}）。`);
+  }
+
+  let payload: AnalyticsApiResponse<T>;
+
+  try {
+    payload = (await response.json()) as AnalyticsApiResponse<T>;
+  } catch {
+    throw new Error("分析 API 回傳的不是有效 JSON。");
+  }
+
+  if (!payload.ok) {
+    throw new Error(payload.error?.trim() || "分析 API 回傳失敗。");
+  }
+
+  return payload.data;
+}
+
 function toStringValue(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value.trim() : fallback;
 }
@@ -236,6 +304,199 @@ export async function fetchRecipes(): Promise<Recipe[]> {
   }
 
   return normalizeRecipeList(payload.data);
+}
+
+function normalizeSummary(value: unknown): AnalyticsSummary {
+  if (!isRecord(value)) {
+    throw new Error("分析摘要格式不正確。");
+  }
+
+  const toSummaryItem = (item: unknown) => {
+    if (!isRecord(item)) {
+      return null;
+    }
+
+    const label = toStringValue(item.label);
+    if (!label) {
+      return null;
+    }
+
+    return {
+      label,
+      count: normalizeNumber(item.count),
+    };
+  };
+
+  return {
+    days: normalizeNumber(value.days) || 30,
+    totalEvents: normalizeNumber(value.totalEvents),
+    recipeViews: normalizeNumber(value.recipeViews),
+    productClicks: normalizeNumber(value.productClicks),
+    topMethod: toSummaryItem(value.topMethod),
+    topRecipe: toSummaryItem(value.topRecipe),
+    topProduct: toSummaryItem(value.topProduct),
+  };
+}
+
+function normalizeDailyMethodStats(value: unknown): DailyMethodStat[] {
+  if (!Array.isArray(value)) {
+    throw new Error("料理方式統計格式不正確。");
+  }
+
+  return value.map((item) => {
+    if (!isRecord(item)) {
+      throw new Error("料理方式統計列格式不正確。");
+    }
+
+    return {
+      date: toStringValue(item.date),
+      method: toStringValue(item.method),
+      count: normalizeNumber(item.count),
+      updatedAt: toStringValue(item.updatedAt),
+    };
+  });
+}
+
+function normalizeDailyRecipeStats(value: unknown): DailyRecipeStat[] {
+  if (!Array.isArray(value)) {
+    throw new Error("食譜統計格式不正確。");
+  }
+
+  return value.map((item) => {
+    if (!isRecord(item)) {
+      throw new Error("食譜統計列格式不正確。");
+    }
+
+    return {
+      date: toStringValue(item.date),
+      recipeId: toStringValue(item.recipeId),
+      recipeName: toStringValue(item.recipeName),
+      viewCount: normalizeNumber(item.viewCount),
+      productClickCount: normalizeNumber(item.productClickCount),
+      updatedAt: toStringValue(item.updatedAt),
+    };
+  });
+}
+
+function normalizeDailyProductStats(value: unknown): DailyProductStat[] {
+  if (!Array.isArray(value)) {
+    throw new Error("商品統計格式不正確。");
+  }
+
+  return value.map((item) => {
+    if (!isRecord(item)) {
+      throw new Error("商品統計列格式不正確。");
+    }
+
+    return {
+      date: toStringValue(item.date),
+      productId: toStringValue(item.productId),
+      productName: toStringValue(item.productName),
+      viewCount: normalizeNumber(item.viewCount),
+      productClickCount: normalizeNumber(item.productClickCount),
+      updatedAt: toStringValue(item.updatedAt),
+    };
+  });
+}
+
+function normalizeDailySceneStats(value: unknown): DailySceneStat[] {
+  if (!Array.isArray(value)) {
+    throw new Error("情境統計格式不正確。");
+  }
+
+  return value.map((item) => {
+    if (!isRecord(item)) {
+      throw new Error("情境統計列格式不正確。");
+    }
+
+    return {
+      date: toStringValue(item.date),
+      sceneTag: toStringValue(item.sceneTag),
+      count: normalizeNumber(item.count),
+      updatedAt: toStringValue(item.updatedAt),
+    };
+  });
+}
+
+function normalizeDailyEventStats(value: unknown): DailyEventStat[] {
+  if (!Array.isArray(value)) {
+    throw new Error("事件統計格式不正確。");
+  }
+
+  return value.map((item) => {
+    if (!isRecord(item)) {
+      throw new Error("事件統計列格式不正確。");
+    }
+
+    return {
+      date: toStringValue(item.date),
+      eventType: toStringValue(item.eventType),
+      count: normalizeNumber(item.count),
+      updatedAt: toStringValue(item.updatedAt),
+    };
+  });
+}
+
+export async function fetchAnalyticsSummary(days: number): Promise<AnalyticsSummary> {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    return {
+      days: normalizeDays(days),
+      totalEvents: 0,
+      recipeViews: 0,
+      productClicks: 0,
+      topMethod: null,
+      topRecipe: null,
+      topProduct: null,
+    };
+  }
+
+  return normalizeSummary(await fetchApi<unknown>("getAnalyticsSummary", days));
+}
+
+export async function fetchDailyMethodStats(days: number): Promise<DailyMethodStat[]> {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    return [];
+  }
+
+  return normalizeDailyMethodStats(await fetchApi<unknown>("getDailyMethodStats", days));
+}
+
+export async function fetchDailyRecipeStats(days: number): Promise<DailyRecipeStat[]> {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    return [];
+  }
+
+  return normalizeDailyRecipeStats(await fetchApi<unknown>("getDailyRecipeStats", days));
+}
+
+export async function fetchDailyProductStats(days: number): Promise<DailyProductStat[]> {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    return [];
+  }
+
+  return normalizeDailyProductStats(await fetchApi<unknown>("getDailyProductStats", days));
+}
+
+export async function fetchDailySceneStats(days: number): Promise<DailySceneStat[]> {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    return [];
+  }
+
+  return normalizeDailySceneStats(await fetchApi<unknown>("getDailySceneStats", days));
+}
+
+export async function fetchDailyEventStats(days: number): Promise<DailyEventStat[]> {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    return [];
+  }
+
+  return normalizeDailyEventStats(await fetchApi<unknown>("getDailyEventStats", days));
 }
 
 export function logRecipeEvent(event: RecipeEventPayload): void {
