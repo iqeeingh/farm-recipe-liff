@@ -1,6 +1,7 @@
 export const METHOD_OPTIONS = [
   "全部",
   "煎",
+  "涼拌",
   "炸",
   "滷",
   "烤",
