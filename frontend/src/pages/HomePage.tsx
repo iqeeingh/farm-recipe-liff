@@ -24,6 +24,16 @@ export function HomePage({
   onMethodChange,
   onRecipeSelect,
 }: HomePageProps) {
+  const hasSearchKeyword = searchText.trim().length > 0;
+  const emptyStateTitle = hasSearchKeyword
+    ? `找不到「${searchText.trim()}」相關食譜`
+    : `目前還沒有「${selectedMethod}」類食譜`;
+
+  const handleResetFilters = () => {
+    onMethodChange("全部");
+    onSearchChange("");
+  };
+
   return (
     <main className="app-shell">
       <section className="hero-panel">
@@ -84,8 +94,11 @@ export function HomePage({
           </div>
         ) : (
           <div className="empty-state">
-            <h2>找不到符合條件的食譜</h2>
-            <p>可以試著更換料理方式，或縮短搜尋關鍵字。</p>
+            <h2>{emptyStateTitle}</h2>
+            <p>可以調整料理方式或搜尋條件，或先回到全部食譜重新瀏覽。</p>
+            <button type="button" className="empty-state-button" onClick={handleResetFilters}>
+              查看全部食譜
+            </button>
           </div>
         )}
       </section>
