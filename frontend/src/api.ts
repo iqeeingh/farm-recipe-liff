@@ -231,6 +231,23 @@ function toStepArray(value: unknown): string[] {
   return [];
 }
 
+function toTipsArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (typeof item === "string" ? item.trim() : ""))
+      .filter((item) => item.length > 0);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(/[｜|]/g)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+  }
+
+  return [];
+}
+
 function toMethodArray(value: unknown): Recipe["method"] {
   const methodOptions = new Set(METHOD_OPTIONS.filter((item) => item !== "全部"));
   const methods = toStringArray(value).filter(
@@ -267,7 +284,7 @@ function normalizeRecipe(value: unknown, index: number): Recipe {
     ),
     ingredients: toStringArray(value.ingredients),
     steps: toStepArray(value.steps),
-    tips: toStringArray(value.tips),
+    tips: toTipsArray(value.tips),
     productUrl: toStringValue(value.productUrl, "#"),
   };
 }

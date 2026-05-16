@@ -53,6 +53,12 @@ No real secrets should be committed.
 - Frontend step parsing also accepts fallback `|`.
 - Steps are not split on commas, `、`, or sentence punctuation.
 
+### Recipe tips delimiter
+
+- Google Sheet recipe `tips` content should use `｜` as the official delimiter between reminder bullets.
+- Frontend tips parsing also accepts fallback `|`.
+- Tips are not split on commas, `、`, or sentence punctuation.
+
 ### Static assets
 
 Place `recipe-placeholder.png` inside `frontend/public/` so recipe cards and detail pages can fall back to `/recipe-placeholder.png` when an image URL is missing or fails to load.

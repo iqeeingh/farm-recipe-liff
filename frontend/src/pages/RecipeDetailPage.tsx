@@ -12,6 +12,7 @@ const FALLBACK_IMAGE_SRC = "/recipe-placeholder.png";
 export function RecipeDetailPage({ recipe, onBack, onProductClick }: RecipeDetailPageProps) {
   const initialImageSrc = recipe.imageUrl.trim() || FALLBACK_IMAGE_SRC;
   const [imageSrc, setImageSrc] = useState(initialImageSrc);
+  const hasTips = recipe.tips.length > 0;
 
   const handleImageError = () => {
     if (imageSrc !== FALLBACK_IMAGE_SRC) {
@@ -59,14 +60,16 @@ export function RecipeDetailPage({ recipe, onBack, onProductClick }: RecipeDetai
           </ol>
         </section>
 
-        <section className="detail-panel">
-          <h2>料理提醒</h2>
-          <ul>
-            {recipe.tips.map((tip) => (
-              <li key={tip}>{tip}</li>
-            ))}
-          </ul>
-        </section>
+        {hasTips ? (
+          <section className="detail-panel">
+            <h2>料理提醒</h2>
+            <ul>
+              {recipe.tips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <button type="button" className="purchase-button" onClick={() => onProductClick(recipe)}>
           前往購買商品
