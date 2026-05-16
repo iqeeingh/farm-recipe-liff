@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Recipe } from "../types";
 
 interface RecipeCardProps {
@@ -5,8 +6,18 @@ interface RecipeCardProps {
   onClick: (recipe: Recipe) => void;
 }
 
+const FALLBACK_IMAGE_SRC = "/recipe-placeholder.png";
+
 export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
-  const imageAlt = recipe.recipeName || recipe.productName || "食譜圖片";
+  const imageAlt = recipe.recipeName || "食譜圖片";
+  const initialImageSrc = recipe.imageUrl.trim() || FALLBACK_IMAGE_SRC;
+  const [imageSrc, setImageSrc] = useState(initialImageSrc);
+
+  const handleImageError = () => {
+    if (imageSrc !== FALLBACK_IMAGE_SRC) {
+      setImageSrc(FALLBACK_IMAGE_SRC);
+    }
+  };
 
   return (
     <button
@@ -15,7 +26,7 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
       onClick={() => onClick(recipe)}
       aria-label={`查看 ${recipe.recipeName}`}
     >
-      <img className="recipe-card-image" src={recipe.imageUrl} alt={imageAlt} />
+      <img className="recipe-card-image" src={imageSrc} alt={imageAlt} onError={handleImageError} />
       <div className="recipe-card-body">
         <div className="recipe-card-tags">
           {recipe.method.map((item) => (

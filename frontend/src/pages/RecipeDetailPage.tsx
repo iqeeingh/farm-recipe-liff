@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Recipe } from "../types";
 
 interface RecipeDetailPageProps {
@@ -6,7 +7,18 @@ interface RecipeDetailPageProps {
   onProductClick: (recipe: Recipe) => void;
 }
 
+const FALLBACK_IMAGE_SRC = "/recipe-placeholder.png";
+
 export function RecipeDetailPage({ recipe, onBack, onProductClick }: RecipeDetailPageProps) {
+  const initialImageSrc = recipe.imageUrl.trim() || FALLBACK_IMAGE_SRC;
+  const [imageSrc, setImageSrc] = useState(initialImageSrc);
+
+  const handleImageError = () => {
+    if (imageSrc !== FALLBACK_IMAGE_SRC) {
+      setImageSrc(FALLBACK_IMAGE_SRC);
+    }
+  };
+
   return (
     <main className="app-shell">
       <button type="button" className="back-button" onClick={onBack}>
@@ -14,7 +26,7 @@ export function RecipeDetailPage({ recipe, onBack, onProductClick }: RecipeDetai
       </button>
 
       <article className="detail-shell">
-        <img className="detail-image" src={recipe.imageUrl} alt={recipe.recipeName} />
+        <img className="detail-image" src={imageSrc} alt={recipe.recipeName} onError={handleImageError} />
 
         <div className="detail-header">
           <div className="recipe-card-tags">

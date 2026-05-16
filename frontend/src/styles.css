@@ -220,6 +220,9 @@ img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  object-position: center;
+  background: linear-gradient(180deg, #f0ead8 0%, #e6efe4 100%);
+  overflow: hidden;
 }
 
 .recipe-card-body,

@@ -29,6 +29,10 @@ ${VITE_GAS_API_BASE}?action=logEvent&...
 
 No real secrets should be committed.
 
+### Static assets
+
+Place `recipe-placeholder.png` inside `frontend/public/` so recipe cards and detail pages can fall back to `/recipe-placeholder.png` when an image URL is missing or fails to load.
+
 ### Local development
 
 ```bash
