@@ -29,6 +29,13 @@ ${VITE_GAS_API_BASE}?action=logEvent&...
 
 No real secrets should be committed.
 
+### Recipe taxonomy
+
+- `method` is the single-select cooking-method taxonomy used by the home-page filter chips.
+- Current method chip taxonomy: `全部`, `煎`, `炒`, `炸`, `滷`, `烤`, `氣炸`, `煮湯`, `燉煮`, `涼拌`, `蒸`, `快速料理`
+- `sceneTags` are separate multi-value usage-scene labels such as meal context or audience.
+- `sceneTags` must not be added to the method chips.
+
 ### Static assets
 
 Place `recipe-placeholder.png` inside `frontend/public/` so recipe cards and detail pages can fall back to `/recipe-placeholder.png` when an image URL is missing or fails to load.

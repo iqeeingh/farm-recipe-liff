@@ -1,15 +1,16 @@
 export const METHOD_OPTIONS = [
   "全部",
   "煎",
-  "涼拌",
+  "炒",
   "炸",
   "滷",
   "烤",
   "氣炸",
   "煮湯",
+  "燉煮",
+  "涼拌",
+  "蒸",
   "快速料理",
-  "小孩愛吃",
-  "下酒菜",
 ] as const;
 
 export type MethodFilter = (typeof METHOD_OPTIONS)[number];
